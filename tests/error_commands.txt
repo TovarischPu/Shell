@@ -1,0 +1,5 @@
+# comm
+ls
+unknown_command
+cd "unclosed quote
+ls -a

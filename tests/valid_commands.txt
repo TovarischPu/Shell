@@ -1,0 +1,4 @@
+# comm
+ls -l /home/user
+cd "My Documents"
+ls

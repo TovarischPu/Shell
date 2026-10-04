@@ -1,0 +1,7 @@
+# comm
+ls -l /home/user
+cd "My Documents"
+ls
+unknown_command
+cd "unclosed quote
+ls -a

@@ -33,3 +33,12 @@ vfs> cd "unclosed quote
 vfs: parse error: No closing quotation
 
 vfs> exit
+
+### Stage 2: Configuration
+
+Extended functionality:
+- Command-line arguments parsing (`--vfs-path`, `--script`)
+- Debug output of all provided parameters at startup
+- Startup script execution with sequential command processing
+- Error handling during script execution (skips erroneous lines)
+- Imitation of user dialogue (displays both input and output)

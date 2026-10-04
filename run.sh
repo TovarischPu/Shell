@@ -3,4 +3,4 @@
 cd "$(dirname "$0")"
 
 # Запускаем приложение
-python3 src/main.py
+python3 src/main.py "$@"
