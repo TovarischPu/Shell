@@ -42,3 +42,12 @@ Extended functionality:
 - Startup script execution with sequential command processing
 - Error handling during script execution (skips erroneous lines)
 - Imitation of user dialogue (displays both input and output)
+
+### Stage 3: VFS
+
+Virtual file system integration:
+- VFS source is a ZIP archive
+- All operations performed in memory (no extraction to disk)
+- Binary data stored using base64 encoding
+- Error reporting for VFS loading (file not found, invalid format)
+- Real `ls` and `cd` commands working with VFS structure

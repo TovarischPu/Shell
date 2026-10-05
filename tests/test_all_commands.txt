@@ -1,0 +1,29 @@
+#Этап 1
+ls
+unknown_command
+cd "unclosed quote
+ls
+
+#Этап 3:
+ls
+ls /
+cd level1
+ls
+cd level2
+ls
+cd level3
+ls
+cd /
+ls
+cd nonexistent
+ls /missing
+cd ..
+ls
+cd ..
+ls
+
+#Обработка ошибок
+cd "unclosed quote
+ls
+unknown_cmd
+cd
