@@ -3,7 +3,7 @@ from tkinter import scrolledtext
 import shlex
 import sys
 import argparse
-from VFS import VFS
+from vfs import VFS
 import platform
 
 
@@ -63,7 +63,6 @@ class VFSShell:
         self.entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
         self.entry.bind("<Return>", self.process_input)
         self.entry.focus()
-
     def print_debug_info(self, vfs_path, script_path):
         self.print_to_output(
             "--- Debug: Startup Parameters ---\n"
@@ -167,6 +166,7 @@ class VFSShell:
             "cd": lambda a: self.handle_cd(a),
             "uname": lambda a: self.handle_uname(a),
             "rev": lambda a: self.handle_rev(a),
+            "touch": lambda a: self.handle_touch(a),
         }
 
         handler = handlers.get(command)
@@ -175,15 +175,10 @@ class VFSShell:
         else:
             msg = f"Error: command not found: {command}\n"
             self.print_to_output(msg)
-
-
     def handle_exit(self,cmd_args):
         self.print_to_output("Exiting VFS Shell...\n")
         self.root.quit()
         self.root.destroy()
-
-    
-
     def handle_cd(self, cmd_args):
         if not cmd_args:
             self.print_to_output(
@@ -194,11 +189,10 @@ class VFSShell:
             self.vfs.change_dir(cmd_args[0])
         except ValueError as err:
             self.print_to_output(f"cd: {err}\n")
-    def handle_ls(self, cmd_args):
+    def _parse_ls_args(self, cmd_args):
         show_all = False
         long_format = False
         path = None
-
         for arg in cmd_args:
             if arg.startswith('-'):
                 if 'a' in arg:
@@ -207,21 +201,22 @@ class VFSShell:
                     long_format = True
             else:
                 path = arg
+        return show_all, long_format, path
 
+
+    def handle_ls(self, cmd_args):
+        show_all, long_format, path = self._parse_ls_args(cmd_args)
         try:
             items = self.vfs.list_dir(path)
             if not show_all:
                 items = [i for i in items if not i.startswith('.')]
-
+            
             if long_format:
                 self.print_ls_long(items, path)
+            elif items:
+                self.print_to_output('  '.join(items) + '\n')
             else:
-                if items:
-                    self.print_to_output(
-                        '  '.join(items) + '\n'
-                    )
-                else:
-                    self.print_to_output("(empty)\n")
+                self.print_to_output("(empty)\n")
         except ValueError as err:
             self.print_to_output(f"ls: {err}\n")
 
@@ -249,14 +244,12 @@ class VFSShell:
         if not cmd_args:
             self.print_to_output(self.VFS_NAME + '\n')
             return
-
         options = cmd_args[0]
         if not options.startswith('-'):
             self.print_to_output(
                 f"uname: unknown option: {options}\n"
             )
             return
-
         flags = options[1:]
         if 'a' in flags:
             parts = [
@@ -268,7 +261,6 @@ class VFSShell:
             ]
             self.print_to_output(' '.join(parts) + '\n')
             return
-
         result = []
         flag_map = {
             's': self.VFS_NAME,
@@ -284,10 +276,8 @@ class VFSShell:
                 msg = f"uname: unknown option: {flag}\n"
                 self.print_to_output(msg)
                 return
-
         if result:
             self.print_to_output(' '.join(result) + '\n')
-
     def handle_rev(self, cmd_args):
         if not cmd_args:
             self.print_to_output("rev: missing argument\n")
@@ -301,8 +291,24 @@ class VFSShell:
                 self.print_to_output(line[::-1] + '\n')
         except ValueError:
             self.print_to_output(target[::-1] + '\n')
+    def handle_touch(self, cmd_args):
+        if not cmd_args:
+            self.print_to_output(
+                "touch: missing file operand\n"
+            )
+            return
 
-
+        for filename in cmd_args:
+            if filename.startswith('-'):
+                msg = (
+                    f"touch: unknown option: {filename}\n"
+                )
+                self.print_to_output(msg)
+                continue
+            try:
+                self.vfs.create_file(filename)
+            except ValueError as err:
+                self.print_to_output(f"touch: {err}\n")
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="VFS Shell Emulator"
@@ -316,8 +322,6 @@ def parse_arguments():
         help="Path to the startup script to execute"
     )
     return parser.parse_args()
-
-
 if __name__ == "__main__":
     args = parse_arguments()
     root = tk.Tk()

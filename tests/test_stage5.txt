@@ -1,0 +1,43 @@
+# === Тестирование Этапа 5: команда touch ===
+
+#Создание файлов
+touch newfile.txt
+touch another.txt
+ls
+ls -l
+
+#Создание в поддиректории
+cd level1
+touch l1_new.txt
+ls
+cd /
+ls level1
+
+#Создание нескольких файлов за раз
+touch a.txt b.txt c.txt
+ls
+
+#Повторный вызов touch (файл уже существует)
+touch newfile.txt
+ls
+
+#Ошибки
+touch
+touch /nonexistent_dir/file.txt
+touch level1
+touch -x
+
+#Проверка, что файлы реально созданы
+rev newfile.txt
+ls -l
+
+#Комбинированное тестирование всех команд
+uname -a
+cd level1/level2
+pwd 2>/dev/null
+ls
+cd /
+rev "Hello VFS"
+
+#Завершение
+exit

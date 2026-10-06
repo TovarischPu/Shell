@@ -58,3 +58,9 @@ Virtual file system integration:
 - Full `cd` logic with absolute/relative paths
 - New command: `uname` (system information)
 - New command: `rev` (reverse strings and files)
+
+### Stage 5: Additional Commands
+
+- New command: `touch` (create files in VFS memory)
+- All VFS modifications happen only in memory
+- ZIP archive on disk is never modified

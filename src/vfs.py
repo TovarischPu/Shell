@@ -117,11 +117,11 @@ class VFS:
 
         self.cwd = '/' + '/'.join(parts)
     def read_file(self, path):
-        parts = self._parse_path(path)
+        parts = self.parse_path(path)
         if not parts:
             raise ValueError(f"not a file: {path}")
 
-        node = self._get_node(parts)
+        node = self.get_node(parts)
         if node is None:
             raise ValueError(f"path not found: {path}")
         if isinstance(node, dict):
@@ -133,3 +133,34 @@ class VFS:
             except UnicodeDecodeError:
                 return base64.b64encode(node).decode('utf-8')
         return node
+
+    def create_file(self, path):
+        parts = self.parse_path(path)
+        if not parts:
+            raise ValueError("touch: missing file name")
+
+        filename = parts[-1]
+        parent_parts = parts[:-1]
+        parent = (
+            self.get_node(parent_parts)
+            if parent_parts else self.tree
+        )
+
+        if parent is None:
+            raise ValueError(
+                f"no such directory: {path}"
+            )
+        if not isinstance(parent, dict):
+            raise ValueError(
+                f"not a directory: {path}"
+            )
+
+        if filename in parent:
+            existing = parent[filename]
+            if isinstance(existing, dict):
+                raise ValueError(
+                    f"is a directory: {path}"
+                )
+            return
+
+        parent[filename] = ""
