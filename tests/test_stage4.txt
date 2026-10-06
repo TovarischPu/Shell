@@ -1,0 +1,44 @@
+#Тестирование Этапа 4
+
+#Команда ls
+ls
+ls /
+ls -a
+ls -l
+ls -la
+ls /nonexistent
+
+#Команда cd
+cd level1
+ls
+cd level2
+ls
+cd level3
+ls
+cd /
+ls
+cd nonexistent
+cd
+
+#Команда uname
+uname
+uname -s
+uname -n
+uname -r
+uname -v
+uname -m
+uname -a
+uname -x
+
+#Команда rev
+rev hello
+rev "VFS Shell"
+rev level1/l1.txt
+rev nonexistent_file
+
+#Обработка ошибок
+unknown_cmd
+cd "unclosed quote
+ls -x
+uname
+rev

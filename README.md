@@ -51,3 +51,10 @@ Virtual file system integration:
 - Binary data stored using base64 encoding
 - Error reporting for VFS loading (file not found, invalid format)
 - Real `ls` and `cd` commands working with VFS structure
+
+### Stage 4: Core Commands
+
+- Full `ls` logic with `-l` and `-a` flags
+- Full `cd` logic with absolute/relative paths
+- New command: `uname` (system information)
+- New command: `rev` (reverse strings and files)

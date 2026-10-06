@@ -116,3 +116,20 @@ class VFS:
             raise ValueError(f"not a directory: {path}")
 
         self.cwd = '/' + '/'.join(parts)
+    def read_file(self, path):
+        parts = self._parse_path(path)
+        if not parts:
+            raise ValueError(f"not a file: {path}")
+
+        node = self._get_node(parts)
+        if node is None:
+            raise ValueError(f"path not found: {path}")
+        if isinstance(node, dict):
+            raise ValueError(f"is a directory: {path}")
+
+        if isinstance(node, bytes):
+            try:
+                return node.decode('utf-8')
+            except UnicodeDecodeError:
+                return base64.b64encode(node).decode('utf-8')
+        return node
